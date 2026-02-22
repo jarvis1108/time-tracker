@@ -35,7 +35,6 @@ export default function TimeBlock({ entry, onEdit, onDelete }) {
   })
 
   const cat = getCategoryById(entry.category)
-  const heightScale = Math.max(40, Math.min(entry.duration * 0.8, 120))
 
   const handleDelete = () => {
     onDelete()
@@ -64,7 +63,6 @@ export default function TimeBlock({ entry, onEdit, onDelete }) {
         style={{
           transform: `translateX(${offsetX}px)`,
           transition: offsetX === 0 ? 'transform 0.2s ease-out' : 'none',
-          minHeight: `${heightScale}px`,
         }}
       >
         {/* Dot */}
