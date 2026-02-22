@@ -30,7 +30,8 @@ export default function TimeBlock({ entry, onEdit, onDelete }) {
     },
     trackMouse: false,
     trackTouch: true,
-    preventScrollOnSwipe: true,
+    delta: 20,
+    preventScrollOnSwipe: false,
   })
 
   const cat = getCategoryById(entry.category)
