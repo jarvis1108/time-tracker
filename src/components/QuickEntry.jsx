@@ -1,33 +1,18 @@
-import { useState, useEffect } from 'react'
 import { CATEGORIES } from '../utils/categories'
 import { formatElapsed } from '../utils/time'
 
 export default function QuickEntry({
   activeTimer,
   elapsed,
+  description,
+  energy,
   onCategoryTap,
   onStopTimer,
   onDescriptionChange,
   onEnergyChange,
 }) {
-  const [description, setDescription] = useState('')
-  const [energy, setEnergy] = useState(null)
-
-  // Reset description/energy when timer changes
-  useEffect(() => {
-    setDescription('')
-    setEnergy(null)
-  }, [activeTimer?.category])
-
-  const handleDescriptionChange = (e) => {
-    setDescription(e.target.value)
-    onDescriptionChange(e.target.value)
-  }
-
   const handleEnergyToggle = (level) => {
-    const newVal = energy === level ? null : level
-    setEnergy(newVal)
-    onEnergyChange(newVal)
+    onEnergyChange(energy === level ? null : level)
   }
 
   return (
@@ -94,7 +79,7 @@ export default function QuickEntry({
           <input
             type="text"
             value={description}
-            onChange={handleDescriptionChange}
+            onChange={(e) => onDescriptionChange(e.target.value)}
             placeholder="What are you working on?"
             className="flex-1 px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
           />

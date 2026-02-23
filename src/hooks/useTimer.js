@@ -24,8 +24,10 @@ export const useTimer = ({ onTimerStop }) => {
   const [activeTimer, setActiveTimer] = useState(loadTimer)
   const [elapsed, setElapsed] = useState(0)
   const intervalRef = useRef(null)
-  const descriptionRef = useRef('')
-  const energyRef = useRef(null)
+
+  // Description and energy are part of activeTimer state now
+  const description = activeTimer?.description || ''
+  const energy = activeTimer?.energy || null
 
   // Calculate elapsed time
   useEffect(() => {
@@ -54,23 +56,21 @@ export const useTimer = ({ onTimerStop }) => {
       const timerDate = getDateKey(new Date(activeTimer.startedAt))
       const currentDate = getDateKey(now)
       if (timerDate !== currentDate) {
-        // Split at midnight: end the old entry at 23:59, start new one at 00:00
-        const endOfDay = new Date(activeTimer.startedAt)
-        endOfDay.setHours(23, 59, 0, 0)
         onTimerStop({
           category: activeTimer.category,
           date: timerDate,
           startTime: formatTime(new Date(activeTimer.startedAt)),
           endTime: '23:59',
-          description: descriptionRef.current,
-          energy: energyRef.current,
+          description: activeTimer.description || '',
+          energy: activeTimer.energy || null,
         })
-        // Start new timer at midnight for current day
         const midnightStart = new Date(now)
         midnightStart.setHours(0, 0, 0, 0)
         setActiveTimer({
           category: activeTimer.category,
           startedAt: midnightStart.getTime(),
+          description: activeTimer.description || '',
+          energy: activeTimer.energy || null,
         })
       }
     }
@@ -80,7 +80,6 @@ export const useTimer = ({ onTimerStop }) => {
 
   const startTimer = useCallback(
     (category) => {
-      // Stop previous timer first
       if (activeTimer) {
         const now = new Date()
         onTimerStop({
@@ -88,16 +87,15 @@ export const useTimer = ({ onTimerStop }) => {
           date: getDateKey(new Date(activeTimer.startedAt)),
           startTime: formatTime(new Date(activeTimer.startedAt)),
           endTime: formatTime(now),
-          description: descriptionRef.current,
-          energy: energyRef.current,
+          description: activeTimer.description || '',
+          energy: activeTimer.energy || null,
         })
-        // Reset description and energy for new timer
-        descriptionRef.current = ''
-        energyRef.current = null
       }
       setActiveTimer({
         category,
         startedAt: Date.now(),
+        description: '',
+        energy: null,
       })
     },
     [activeTimer, onTimerStop]
@@ -111,23 +109,21 @@ export const useTimer = ({ onTimerStop }) => {
       date: getDateKey(new Date(activeTimer.startedAt)),
       startTime: formatTime(new Date(activeTimer.startedAt)),
       endTime: formatTime(now),
-      description: descriptionRef.current,
-      energy: energyRef.current,
+      description: activeTimer.description || '',
+      energy: activeTimer.energy || null,
     })
-    descriptionRef.current = ''
-    energyRef.current = null
     setActiveTimer(null)
   }, [activeTimer, onTimerStop])
 
   const setDescription = useCallback((desc) => {
-    descriptionRef.current = desc
+    setActiveTimer((prev) => prev ? { ...prev, description: desc } : prev)
   }, [])
 
-  const setEnergy = useCallback((energy) => {
-    energyRef.current = energy
+  const setEnergy = useCallback((val) => {
+    setActiveTimer((prev) => prev ? { ...prev, energy: val } : prev)
   }, [])
 
-  const isRunningLong = activeTimer && elapsed > 4 * 60 * 60 * 1000 // >4 hours
+  const isRunningLong = activeTimer && elapsed > 4 * 60 * 60 * 1000
 
   return {
     activeTimer,
@@ -137,7 +133,7 @@ export const useTimer = ({ onTimerStop }) => {
     setDescription,
     setEnergy,
     isRunningLong,
-    description: descriptionRef.current,
-    energy: energyRef.current,
+    description,
+    energy,
   }
 }

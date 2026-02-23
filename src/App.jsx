@@ -30,7 +30,7 @@ function App() {
     [addEntry]
   )
 
-  const { activeTimer, elapsed, startTimer, stopTimer, setDescription, setEnergy, isRunningLong } =
+  const { activeTimer, elapsed, startTimer, stopTimer, setDescription, setEnergy, isRunningLong, description, energy } =
     useTimer({ onTimerStop })
 
   const todayEntries = useMemo(
@@ -161,6 +161,8 @@ function App() {
         <QuickEntry
           activeTimer={activeTimer}
           elapsed={elapsed}
+          description={description}
+          energy={energy}
           onCategoryTap={startTimer}
           onStopTimer={stopTimer}
           onDescriptionChange={setDescription}
