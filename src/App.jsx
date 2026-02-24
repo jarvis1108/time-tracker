@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import QuickEntry from './components/QuickEntry'
 import Timeline from './components/Timeline'
 import DailySummary from './components/DailySummary'
@@ -22,12 +22,23 @@ function App() {
   const [addDefaults, setAddDefaults] = useState({ start: null, end: null })
   const [showExport, setShowExport] = useState(false)
   const [reminderDismissed, setReminderDismissed] = useState(false)
+  const [toast, setToast] = useState(null)
+  const toastTimerRef = useRef(null)
+
+  const showToast = useCallback((message) => {
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current)
+    setToast(message)
+    toastTimerRef.current = setTimeout(() => setToast(null), 3000)
+  }, [])
 
   const onTimerStop = useCallback(
     (entryData) => {
       addEntry(entryData)
+      if (!entryData.description?.trim()) {
+        showToast('No description — tap the block to add one')
+      }
     },
-    [addEntry]
+    [addEntry, showToast]
   )
 
   const { activeTimer, elapsed, startTimer, stopTimer, setDescription, setEnergy, isRunningLong, description, energy } =
@@ -208,6 +219,15 @@ function App() {
         isOpen={showExport}
         onClose={() => setShowExport(false)}
       />
+
+      {/* Toast notification */}
+      {toast && (
+        <div className="fixed bottom-6 left-4 right-4 z-50 flex justify-center pointer-events-none">
+          <div className="bg-gray-800 text-white text-xs font-medium px-4 py-2.5 rounded-xl shadow-lg animate-toast">
+            {toast}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

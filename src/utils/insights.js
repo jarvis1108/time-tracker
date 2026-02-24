@@ -19,10 +19,29 @@ export const generateDailyMetrics = (entries) => {
     (a, b) => parseTimeToMinutes(a.startTime) - parseTimeToMinutes(b.startTime)
   )
   const firstCore = sorted.find((e) => e.category === 'core_work')
-  const firstEntry = sorted[0]
+
+  // "Wake" = end of the last Rest block before the first non-Rest entry
+  // This handles sleep entries that start in the morning (e.g., Rest 00:00-09:00)
+  let wakeTime = null
+  const firstNonRest = sorted.find((e) => e.category !== 'rest')
+  if (firstNonRest) {
+    // Check if there are Rest blocks before the first non-Rest entry
+    const restBeforeWake = sorted.filter(
+      (e) => e.category === 'rest' && parseTimeToMinutes(e.endTime) <= parseTimeToMinutes(firstNonRest.startTime)
+    )
+    if (restBeforeWake.length > 0) {
+      // Wake time = end of the last rest block before activity starts
+      const lastRest = restBeforeWake[restBeforeWake.length - 1]
+      wakeTime = parseTimeToMinutes(lastRest.endTime)
+    } else {
+      // No rest blocks before first activity — use first entry start as wake proxy
+      wakeTime = parseTimeToMinutes(firstNonRest.startTime)
+    }
+  }
+
   const wakeToCore =
-    firstCore && firstEntry
-      ? parseTimeToMinutes(firstCore.startTime) - parseTimeToMinutes(firstEntry.startTime)
+    firstCore && wakeTime !== null
+      ? parseTimeToMinutes(firstCore.startTime) - wakeTime
       : null
 
   return {

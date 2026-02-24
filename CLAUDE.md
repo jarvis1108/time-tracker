@@ -84,6 +84,38 @@ Active timer in localStorage (`time-tracker-active-timer`):
 }
 ```
 
+## Classification Rules
+
+Source of truth: `classification-rules.md`. Keep that file and this section in sync when rules change.
+
+### Categories
+
+| Emoji | ID | Label | Definition |
+|-------|----|-------|------------|
+| 🎯 | core_work | Core Work | Direct output: job applications, resume tailoring, interview prep, portfolio work |
+| 🔧 | exploration | Exploration | Work-adjacent but not direct output: planning, reviewing tasks, optimizing systems, learning tools |
+| 💰 | side_hustle | Side Hustle | Manufactured spending, mileage transfers, credit card research |
+| 🏃 | fitness | Fitness | Gym, exercise, sports |
+| 👥 | social | Social | Calls/hangouts with girlfriend, family, friends; networking |
+| 🍳 | life_admin | Life Admin | Doing a specific task: cooking, eating, walking dog, errands, cleaning, groceries |
+| 🎮 | leisure | Leisure | Active entertainment + aimless browsing. **When in doubt, choose this** |
+| 😴 | rest | Rest | Body is recovering: sleep, naps, intentional rest. Holding your phone ≠ Rest |
+
+### Key Principles
+
+1. **Classify by behavior, not by purpose.** Record purpose in the description field.
+2. **Rest = body recovering, no screen.** Phone in hand → Leisure.
+3. **Life Admin = doing a specific task.** Aimless browsing ≠ Life Admin.
+4. **When in doubt → Leisure.** Better to overestimate it.
+5. **Core Work vs Exploration:** Direct output → Core Work. Supporting work (planning, reviewing) → Exploration.
+6. **Always add 2-3 words of description.** Post-hoc analysis depends on it.
+
+### Analysis Notes
+
+- **Life Admin fixed costs** (~2.5h/day: eating, dog, hygiene) are unavoidable. Use descriptions to separate fixed vs controllable.
+- **Core Work + Exploration** = total work investment. Track output ratio (Core Work ÷ total).
+- **Late-night Leisure** (00:00–02:00) should be flagged — often suppressed daytime needs.
+
 ## Styling
 
 - Tailwind CSS v4 with `@tailwindcss/vite` plugin
@@ -109,6 +141,7 @@ Active timer in localStorage (`time-tracker-active-timer`):
 
 - **After fixing a bug or completing a backlog item:** Update `BACKLOG.md` — mark the item as ✅ Fixed with a short note on the fix, and update the Quick Reference table status.
 - **After changing data schema or architecture:** Update the relevant sections in this file (`CLAUDE.md`).
+- **After changing classification rules:** Update both `classification-rules.md` (source of truth), the Classification Rules section in this file, and `README.md` (user-facing rules).
 - **Deploy flow:** `npm run build` → verify clean → `git commit` → `git push` → `npx vercel --prod --yes`.
 
 ## Deployment

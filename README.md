@@ -33,18 +33,31 @@ npx vercel --prod
 
 Tap one of 8 category buttons to start a timer. Tapping a different category automatically stops the previous timer and starts a new one. No confirmation dialogs — one tap = done.
 
-| Category | Emoji | Color |
-|----------|-------|-------|
-| Core Work | 🎯 | Blue |
-| Exploration | 🔧 | Light Blue |
-| Side Hustle | 💰 | Amber |
-| Fitness | 🏃 | Green |
-| Social | 👥 | Purple |
-| Life Admin | 🍳 | Orange |
-| Leisure | 🎮 | Red |
-| Rest | 😴 | Gray |
+| Category | Emoji | What it covers | Examples |
+|----------|-------|----------------|----------|
+| Core Work | 🎯 | Direct output toward your main goal | Job applications, resume tailoring, interview prep, portfolio work |
+| Exploration | 🔧 | Work-adjacent but not direct output | Planning, reviewing tasks, optimizing systems, learning tools |
+| Side Hustle | 💰 | Side income activities | Manufactured spending, mileage transfers, credit card research |
+| Fitness | 🏃 | Physical activity | Gym, exercise, sports |
+| Social | 👥 | People time | Calls, hangouts, family, friends, networking |
+| Life Admin | 🍳 | Doing a specific task | Cooking, eating, walking dog, errands, cleaning, groceries |
+| Leisure | 🎮 | Active entertainment + aimless browsing | Scrolling social media, gaming, watching shows, random phone time |
+| Rest | 😴 | Body is recovering (no screen) | Sleep, naps, intentional rest. Holding your phone ≠ Rest |
+
+> **Core Work vs Exploration:** If it directly moves an application/interview/portfolio forward → Core Work. If it supports that work but doesn't produce output (planning, reviewing) → Exploration.
 
 Optionally add a **description** (e.g., "saved 16 jobs on LinkedIn") and an **energy tag** (High / Low) while a timer is running.
+
+### Classification Rules
+
+**Classify by behavior, not by purpose.** Record the purpose in the description field.
+
+- Spending 2 hours browsing gifts online = **Leisure** (behavior is browsing), not Social. Write "gift for gf" in description.
+- Picking up a pre-selected gift in 10 min = **Life Admin** (doing a specific errand).
+- Aimless phone scrolling = **Leisure**, even if it doesn't feel like entertainment.
+- Lying in bed with no screen = **Rest**. Lying in bed scrolling phone = **Leisure**.
+- When in doubt, choose **Leisure**. Better to overestimate it — the audit is about exposing where time goes.
+- Add 2-3 words of description to every entry. No need for sentences — "food", "dog", "phone", "applying" are fine.
 
 ### Timeline
 
