@@ -2,12 +2,13 @@ import { getCategoryById } from './categories'
 import { formatDuration } from './time'
 import { generateCategoryBreakdown, generateDailyMetrics } from './insights'
 
-export const exportAsJSON = (entries) => {
+export const exportAsJSON = (entries, startDate, endDate) => {
   const data = JSON.stringify({ entries, exportedAt: new Date().toISOString() }, null, 2)
-  downloadFile(data, 'time-tracker-export.json', 'application/json')
+  const suffix = startDate && endDate ? `${startDate}_${endDate}` : 'all'
+  downloadFile(data, `time-tracker-${suffix}.json`, 'application/json')
 }
 
-export const exportAsMarkdown = (entries, dateRange) => {
+export const exportAsMarkdown = (entries, dateRange, startDate, endDate) => {
   const grouped = {}
   entries.forEach((e) => {
     if (!grouped[e.date]) grouped[e.date] = []
@@ -46,7 +47,8 @@ export const exportAsMarkdown = (entries, dateRange) => {
     md += `\n---\n\n`
   }
 
-  downloadFile(md, 'time-tracker-report.md', 'text/markdown')
+  const suffix = startDate && endDate ? `${startDate}_${endDate}` : 'all'
+  downloadFile(md, `time-tracker-${suffix}.md`, 'text/markdown')
 }
 
 const downloadFile = (content, filename, type) => {

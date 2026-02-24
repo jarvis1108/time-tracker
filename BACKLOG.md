@@ -6,21 +6,27 @@
 
 | # | Issue | 类别 | 优先级 | 难度 | 状态 |
 |---|-------|------|--------|------|------|
-| 1 | Safari webapp 输入框缩放 | Bug | P0 | 低 | ✅ Fixed |
-| 2 | Timeline 无法触摸滚动 | Bug | P0 | 低 | ✅ Fixed |
 | 3 | Timeline 缺乏日历感（无色块背景） | 视觉 | P2 | 中 | Open |
-| 4 | Life Admin 细分（必需 vs 主动） | 分类 | P3 | 中 | Open |
 | 5 | 数据安全感 + 新手引导 / onboarding | UX | P2 | 中 | Open |
-| 6 | 中文支持 / i18n | UX | P3 | 高 | Open |
 | 7 | 更丰富的笔记 / 语音输入 | 记录 | P2 | 高 | Open |
-| 8 | 休息提醒与 Flow 保护 | 健康 | P3 | 中 | Open |
-| 9 | 切换类别不清空描述输入框 | Bug | P0 | 低 | Open |
 | 10 | 审计模式应更鼓励输入细节 | UX | P2 | 中 | Open |
+| 15 | 持续关注时间导致焦虑 | 方法论 | P2 | — | Open (设计) |
+| 4 | Life Admin 细分（必需 vs 主动） | 分类 | P3 | 中 | Open |
+| 6 | 中文支持 / i18n | UX | P3 | 高 | Open |
+| 8 | 休息提醒与 Flow 保护 | 健康 | P3 | 中 | Open |
 | 11 | 跨类别活动归类问题（目的 vs 行为） | 分类 | P3 | — | Open (设计) |
-| 12 | Description 在 session 中途会丢失 | Bug | P0 | 低 | Open |
 | 13 | Leisure vs Rest 边界模糊 | 分类 | P3 | — | Open (设计) |
 | 14 | 碎片时间是否该记录 | 方法论 | P3 | — | Open (设计) |
-| 15 | 持续关注时间导致焦虑 | 方法论 | P2 | — | Open (设计) |
+| 16 | Plan/规划活动的分类归属 | 分类 | P3 | — | Open (设计) |
+| 17 | 能量标记：开始时 vs 结束时？ | 方法论 | P3 | — | Open (设计) |
+| 18 | 倒计时 Timer 功能（限时休息/放空） | 功能 | P2 | 中 | Open |
+| 19 | Long session 中 break 的记录策略 | 方法论 | P3 | — | Open (设计) |
+| 20 | 饭后低能量时段的利用 | 方法论 | P3 | — | Open (设计) |
+| ~~1~~ | ~~Safari webapp 输入框缩放~~ | ~~Bug~~ | ~~P0~~ | ~~低~~ | ✅ Fixed |
+| ~~2~~ | ~~Timeline 无法触摸滚动~~ | ~~Bug~~ | ~~P0~~ | ~~低~~ | ✅ Fixed |
+| ~~9~~ | ~~切换类别不清空描述输入框~~ | ~~Bug~~ | ~~P0~~ | ~~低~~ | ✅ Fixed |
+| ~~12~~ | ~~Description 在 session 中途会丢失~~ | ~~Bug~~ | ~~P0~~ | ~~低~~ | ✅ Fixed |
+| ~~21~~ | ~~导出功能增强（日期范围选择）~~ | ~~功能~~ | ~~P2~~ | ~~中~~ | ✅ Fixed |
 
 > **优先级：** P0=立即修, P1=本周, P2=重要但不急, P3=以后再说
 > **难度：** 低=<1h, 中=几小时, 高=1天+, —=非代码问题
@@ -35,15 +41,11 @@
 ### ~~2. Timeline 区域无法触摸滚动~~ ✅ Fixed
 - 已修复：`preventScrollOnSwipe: false` + `delta: 20`
 
-### 9. 切换类别不清空描述输入框
-- **现象：** 点一个新类别重新计时后，上一条的描述文字还留在输入框里
-- **原因：** `QuickEntry` 的 `useEffect` 依赖 `activeTimer?.category`，但切换时 category 变了、state 应该 reset，可能是 ref vs state 的同步问题
-- **修复方向：** 在 `startTimer` 时显式 reset QuickEntry 的 description/energy state
+### ~~9. 切换类别不清空描述输入框~~ ✅ Fixed
+- 已修复：description/energy 改为 activeTimer state 的一部分，`startTimer` 新建 timer 时自动清空
 
-### 12. Description 在 session 中途丢失
-- **现象：** 刚开始 timer 时写了 note，过一段时间回来发现 note 消失了，只有在 switch 前写才能保存
-- **原因：** description 存在 `useTimer` 的 `useRef` 里，但 `QuickEntry` 的 `useState` 在 re-render 时会被 `useEffect` reset。两套 state 不同步
-- **修复方向：** 要么把 description 也持久化到 localStorage（和 active timer 一起），要么改用受控 state 统一管理
+### ~~12. Description 在 session 中途丢失~~ ✅ Fixed
+- 已修复：description/energy 从 `useRef` 改为 `activeTimer` state 的字段，随 timer 一起持久化到 localStorage。QuickEntry 不再有独立的 description state，直接用 timer 的值作为 single source of truth
 
 ---
 
@@ -158,6 +160,63 @@
   - \> 5 分钟：应该切换
   - 或者：在日总结中提供"碎片化指数"（切换次数 / 总时长），让数据说话
 
+### 16. Plan/规划活动的分类归属
+- **场景：** 做计划、规划工作方式、整理思路——算 Life Admin 还是 Exploration？
+- **思考：**
+  - Life Admin 偏「维持性事务」（处理杂事、跑腿、日常维护）
+  - Exploration 偏「主动探索和学习」
+  - 规划工作本身带有「战略思考」性质，更接近 Exploration？
+  - 但如果是日常 to-do 整理，又更像 Life Admin
+- **可能方向：** 按内容深度区分——浅层整理归 Life Admin，深度思考/策略规划归 Exploration；或者在 description 里标注，事后分析时判断
+
+### 17. 能量标记：开始时 vs 结束时？
+- **问题：** 现在的能量标记（⬆️/⬇️）到底标的是 session 开始时的状态还是结束时的？
+- **差异很大：**
+  - 开始时标 = 记录「带着什么能量状态进入」→ 分析什么时段适合做什么
+  - 结束时标 = 记录「做完之后能量如何」→ 分析什么活动消耗/恢复能量
+  - 两者对数据分析的意义完全不同
+- **可能方向：**
+  - 明确定义为其中一种，在 UI 上给文案提示（如「当前能量状态」vs「做完后感觉」）
+  - 或支持两个标记（开始能量 + 结束能量），但会增加输入负担
+  - 短期审计建议：先统一为一种（建议「开始时」，因为更容易即时标记），description 里补充结束感受
+
+### 18. 倒计时 Timer 功能
+- **场景：**
+  - 玩手机想控制在 15 分钟内
+  - 放空休息想定 5-10 分钟
+  - 番茄钟式工作（25 分钟专注）
+- **与现有 timer 的关系：** 现有 timer 是正计时（记录已过时间），倒计时是新增功能
+- **可能设计：**
+  - 在 QuickEntry 长按类别按钮 → 弹出倒计时设置（5/10/15/25/30 min 快捷选择）
+  - 或在 timer 显示区域加一个「设定时限」按钮
+  - 倒计时结束时：温和提醒（振动 + 视觉变色），不强制停止 timer
+  - timer 到期后继续计时但变色，用户自行决定何时停止
+- **实现考虑：** 需要在 activeTimer 中增加 `countdown` 字段，UI 显示剩余时间
+
+### 19. Long session 中 break 的记录策略
+- **场景：** 工作 2 小时，中间去倒了杯水、上了个厕所（5 分钟），要不要切换记录？
+- **两种策略对比：**
+  - **忽略 break：** 保持一个 2h 的 Core Work 长 session → 数据显示连续专注力强，但不真实
+  - **记录 break：** 2h 被拆成 55min + 5min break + 60min → 数据更真实，但 longest session 指标变短
+- **对数据分析的影响：**
+  - 忽略：longest session 更长，看起来更好，但掩盖了真实的专注模式
+  - 记录：能看到真实的 break 频率和时长，更有分析价值
+- **可能方向：**
+  - 短期审计建议：< 5 分钟的必要 break（喝水、厕所）可以忽略，在 description 备注
+  - 功能层面：考虑「暂停」功能（区别于「停止」），暂停不产生新 entry，恢复后继续同一 session
+  - 暂停功能可以和 #18 倒计时结合——暂停时显示 break 时长
+
+### 20. 饭后低能量时段的利用
+- **场景：** 饭后需要休息，没法太专注，但又不想完全浪费时间
+- **思考：**
+  - 这是生理节律问题，不是工具能直接解决的
+  - 但工具可以帮助识别和优化这个时段
+- **可能方向：**
+  - 用数据验证：通过能量标记 + 时段分析，找到自己的低能量时段模式
+  - 在日总结中加「时段 × 能量 × 类别」的交叉分析
+  - 建议性内容：低能量时段适合做 Life Admin、轻度 Exploration（看文章）、Social
+  - 这更多是方法论问题，工具层面可以通过 insights 来辅助
+
 ### 15. 持续关注时间导致焦虑
 - **现象：** 一直关注时间让用户有点紧张，不敢放松
 - **这是审计工具的固有张力：** 观察行为本身会改变行为（霍桑效应）
@@ -170,6 +229,16 @@
 
 ---
 
+## 功能增强
+
+### 18. 倒计时 Timer 功能
+- 详见上方方法论部分
+
+### ~~21. 导出功能增强（日期范围选择）~~ ✅ Fixed
+- 已修复：ExportMenu 增加日期范围选择（快捷 Today/This Week/All + 自定义日期输入），导出仅包含选定范围的 entries，文件名包含日期范围（如 `time-tracker-2026-02-17_2026-02-23.json`）
+
+---
+
 ## 未来更大的改进
 
 - 跨设备同步（Supabase / Firebase）
@@ -179,4 +248,4 @@
 
 ---
 
-*最后更新：2026-02-23*
+*最后更新：2026-02-23 (added #16-#21, fixed #21)*

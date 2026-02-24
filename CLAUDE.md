@@ -78,7 +78,9 @@ Active timer in localStorage (`time-tracker-active-timer`):
 ```json
 {
   "category": "core_work",
-  "startedAt": 1740000000000
+  "startedAt": 1740000000000,
+  "description": "optional note",
+  "energy": "high" | "low" | null
 }
 ```
 
@@ -102,6 +104,12 @@ Active timer in localStorage (`time-tracker-active-timer`):
 **Adjust gap detection threshold:** Change the `minGapMinutes` default in `src/utils/time.js` → `findGaps()`.
 
 **Change forgotten timer threshold:** In `src/hooks/useTimer.js`, adjust the `4 * 60 * 60 * 1000` value in `isRunningLong`.
+
+## Workflow Rules
+
+- **After fixing a bug or completing a backlog item:** Update `BACKLOG.md` — mark the item as ✅ Fixed with a short note on the fix, and update the Quick Reference table status.
+- **After changing data schema or architecture:** Update the relevant sections in this file (`CLAUDE.md`).
+- **Deploy flow:** `npm run build` → verify clean → `git commit` → `git push` → `npx vercel --prod --yes`.
 
 ## Deployment
 
