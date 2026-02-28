@@ -1,15 +1,19 @@
 import { CATEGORIES } from '../utils/categories'
 import { formatElapsed } from '../utils/time'
+import DescriptionTags from './DescriptionTags'
 
 export default function QuickEntry({
   activeTimer,
   elapsed,
   description,
   energy,
+  tags,
   onCategoryTap,
   onStopTimer,
   onDescriptionChange,
   onEnergyChange,
+  onAddTag,
+  onRemoveTag,
 }) {
   const handleEnergyToggle = (level) => {
     onEnergyChange(energy === level ? null : level)
@@ -73,36 +77,49 @@ export default function QuickEntry({
         })}
       </div>
 
-      {/* Description + Energy */}
+      {/* Description + Tags + Energy */}
       {activeTimer && (
-        <div className="mt-3 flex items-center gap-2">
-          <input
-            type="text"
-            value={description}
-            onChange={(e) => onDescriptionChange(e.target.value)}
-            placeholder="What are you working on?"
-            className="flex-1 px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
+        <div className="mt-3 space-y-2">
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              value={description}
+              onChange={(e) => onDescriptionChange(e.target.value)}
+              placeholder="What are you working on?"
+              className="flex-1 px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
+            />
+            <button
+              onClick={() => handleEnergyToggle('high')}
+              className={`px-2 py-1.5 text-sm rounded-lg transition-colors ${
+                energy === 'high'
+                  ? 'bg-green-100 text-green-700 ring-1 ring-green-300'
+                  : 'bg-gray-50 text-gray-400 hover:bg-gray-100'
+              }`}
+            >
+              ⬆️
+            </button>
+            <button
+              onClick={() => handleEnergyToggle('low')}
+              className={`px-2 py-1.5 text-sm rounded-lg transition-colors ${
+                energy === 'low'
+                  ? 'bg-orange-100 text-orange-700 ring-1 ring-orange-300'
+                  : 'bg-gray-50 text-gray-400 hover:bg-gray-100'
+              }`}
+            >
+              ⬇️
+            </button>
+          </div>
+          <DescriptionTags
+            tags={tags || []}
+            categoryId={activeTimer.category}
+            onSelectTag={(tag) => {
+              const current = description.trim()
+              if (current.toLowerCase().includes(tag.toLowerCase())) return
+              onDescriptionChange(current ? `${current}, ${tag}` : tag)
+            }}
+            onAddTag={onAddTag}
+            onRemoveTag={onRemoveTag}
           />
-          <button
-            onClick={() => handleEnergyToggle('high')}
-            className={`px-2 py-1.5 text-sm rounded-lg transition-colors ${
-              energy === 'high'
-                ? 'bg-green-100 text-green-700 ring-1 ring-green-300'
-                : 'bg-gray-50 text-gray-400 hover:bg-gray-100'
-            }`}
-          >
-            ⬆️
-          </button>
-          <button
-            onClick={() => handleEnergyToggle('low')}
-            className={`px-2 py-1.5 text-sm rounded-lg transition-colors ${
-              energy === 'low'
-                ? 'bg-orange-100 text-orange-700 ring-1 ring-orange-300'
-                : 'bg-gray-50 text-gray-400 hover:bg-gray-100'
-            }`}
-          >
-            ⬇️
-          </button>
         </div>
       )}
     </div>

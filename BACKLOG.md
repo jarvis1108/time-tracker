@@ -10,6 +10,7 @@
 
 | # | Issue | 类别 | 优先级 | 难度 | 状态 |
 |---|-------|------|--------|------|------|
+| ~~23~~ | ~~常用 Description 快捷输入按钮~~ | ~~功能~~ | ~~P1~~ | ~~中~~ | ✅ Fixed |
 | [18](#item-18) | 倒计时 Timer 功能（限时休息/放空） | 功能 | P2 | 中 | Open |
 | [3](#item-3) | Timeline 缺乏日历感（无色块背景） | 视觉 | P2 | 中 | Open |
 | [5](#item-5) | 数据安全感 + 新手引导 / onboarding | UX | P2 | 中 | Open |
@@ -186,9 +187,14 @@
 - **可能设计：**
   - 在 QuickEntry 长按类别按钮 → 弹出倒计时设置（5/10/15/25/30 min 快捷选择）
   - 或在 timer 显示区域加一个「设定时限」按钮
-  - 倒计时结束时：温和提醒（振动 + 视觉变色），不强制停止 timer
+  - 倒计时结束时：音频提示音 + 视觉变色（timer 区域变红/闪烁），不强制停止 timer
   - timer 到期后继续计时但变色，用户自行决定何时停止
 - **实现考虑：** 需要在 activeTimer 中增加 `countdown` 字段，UI 显示剩余时间
+- **iOS webapp 限制：**
+  - `navigator.vibrate()` iOS Safari 不支持，只能用音频 + 视觉
+  - 后台提醒几乎不可能：iOS 会挂起后台 web app，setTimeout/setInterval 不执行
+  - Push Notification 需要后端（推送服务器 + VAPID key），当前纯前端架构实现成本很高
+  - 实际效果：只有 app 在前台时能提醒；切到其他 app 后回来只能显示「已超时 X 分钟」
 
 <a id="item-19"></a>
 
@@ -234,6 +240,11 @@
 
 ## 功能增强
 
+<a id="item-23"></a>
+
+### ~~23. 常用 Description 快捷输入按钮~~ ✅ Fixed
+- 已修复：description 输入框下方新增按类别过滤的快捷 tag chips（横向滚动）。点击填入/追加 description，长按删除，`+` 按钮添加自定义 tag。默认 tag 内置于 `src/utils/tags.js`，自定义 tag 持久化到 localStorage（`time-tracker-custom-tags`）。同时从历史 entries 中自动提取高频 description（≥2 次）合并显示
+
 ### 18. 倒计时 Timer 功能
 - 详见上方方法论部分
 
@@ -254,4 +265,4 @@
 
 ---
 
-*最后更新：2026-02-24 (fixed #10, #11, #13, #16, #22)*
+*最后更新：2026-02-28 (fixed #23)*

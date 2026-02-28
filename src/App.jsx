@@ -9,7 +9,9 @@ import ExportMenu from './components/ExportMenu'
 import ReminderBanner from './components/ReminderBanner'
 import { useEntries } from './hooks/useEntries'
 import { useTimer } from './hooks/useTimer'
+import { useTags } from './hooks/useTags'
 import { getDateKey } from './utils/time'
+import { getDescriptionFrequency, getMergedTags } from './utils/tags'
 
 function App() {
   const { entries, addEntry, updateEntry, deleteEntry, getEntriesForDate, getEntriesForWeek } =
@@ -43,6 +45,20 @@ function App() {
 
   const { activeTimer, elapsed, startTimer, stopTimer, setDescription, setEnergy, isRunningLong, description, energy } =
     useTimer({ onTimerStop })
+
+  const { customTags, addTag, removeTag } = useTags()
+
+  const descriptionFrequency = useMemo(
+    () => getDescriptionFrequency(entries),
+    [entries]
+  )
+
+  const activeTags = useMemo(
+    () => activeTimer
+      ? getMergedTags(activeTimer.category, customTags, descriptionFrequency)
+      : [],
+    [activeTimer, customTags, descriptionFrequency]
+  )
 
   const todayEntries = useMemo(
     () => getEntriesForDate(selectedDate),
@@ -174,10 +190,13 @@ function App() {
           elapsed={elapsed}
           description={description}
           energy={energy}
+          tags={activeTags}
           onCategoryTap={startTimer}
           onStopTimer={stopTimer}
           onDescriptionChange={setDescription}
           onEnergyChange={setEnergy}
+          onAddTag={addTag}
+          onRemoveTag={removeTag}
         />
       )}
 
