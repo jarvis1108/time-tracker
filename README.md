@@ -24,7 +24,7 @@ A mobile-first web app for personal time tracking during a 1-week high-granulari
 
 ### Use the app
 
-1. Open the URL above on your phone (iPhone Chrome recommended)
+1. Open the URL above on your phone (iPhone Safari recommended)
 2. Tap **Add to Home Screen** for an app-like experience
 3. Tap a category button to start tracking — that's it
 
