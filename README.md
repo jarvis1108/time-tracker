@@ -1,8 +1,24 @@
 # Time Tracker
 
+<img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/3f9cabf8-4abb-4c9c-9dce-3c3b8afac326" />
+<br>
+
 A mobile-first web app for personal time tracking during a 1-week high-granularity audit. Track how you spend your time across 8 categories with one-tap entry, daily timelines, and weekly insights.
 
 **Live:** https://time-tracker-seven-ebon.vercel.app
+
+> Built in two evenings (Feb 2026) because I needed mobile-first, one-tap time
+> tracking with a granularity that off-the-shelf tools (Toggl, RescueTime,
+> Timery) didn't match for a 1-week intensive audit during my job search. The
+> off-the-shelf options either had too much friction (manual stop/start, app
+> switch) or too little structure (free-form text instead of behavior-based
+> categories). This solved both.
+>
+> The 8-day audit it ran produced concrete productivity patterns I'm acting on
+> — proof of concept that the tool does its job. The tool itself is intentionally
+> single-purpose: I'm not trying to make a Toggl competitor, I'm trying to make
+> the data my own audit needed.
+
 
 ## Getting Started
 
