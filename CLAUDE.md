@@ -6,6 +6,15 @@ Project guide for AI-assisted maintenance of this codebase.
 
 Time Tracker — a mobile-first React web app for personal time tracking. Uses localStorage for persistence, no backend. Deployed to Vercel as a static site.
 
+## Shared Context — User Profile
+
+User identity and collaboration preferences live in `~/Personal/identity/` — a separate private repo shared across `~/Projects/*` (per portfolio B-87 Shared Knowledge Layer):
+
+- `profile.md` — who the user is and how to collaborate (background, technical-explanation preference, communication / language, timezone). Read this at the start of a session.
+- `contact.md` — canonical contact fields (name, location, phone, email, LinkedIn, portfolio URL).
+
+If `~/Personal/` is unreachable (different machine, repo not synced), surface the gap to the user rather than guessing.
+
 ## Commands
 
 - `npm run dev` — Start dev server (Vite)
